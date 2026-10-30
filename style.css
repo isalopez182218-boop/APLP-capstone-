@@ -65,7 +65,7 @@ a:hover { text-decoration-thickness: 2px; }
   letter-spacing: .06em;
   font-variant: small-caps;
 }
-.rh-title { font-style: italic; font-variant: normal; letter-spacing: 0; font-size: .9375rem; }
+.rh-title { text-decoration: none; font-style: italic; font-variant: normal; letter-spacing: 0; font-size: .9375rem; }
 .rh-meta { color: var(--ink-2); text-align: right; }
 
 /* Page grid */
@@ -77,14 +77,7 @@ a:hover { text-decoration-thickness: 2px; }
 }
 main { max-width: var(--measure); margin: 0 auto; counter-reset: sec fig; }
 
-@media (min-width: 1100px) {
-  .page {
-    display: grid;
-    grid-template-columns: 13rem minmax(0, 1fr);
-    column-gap: 3.5rem;
-  }
-  main { margin: 0; }
-}
+
 
 /* Contents rail */
 .toc { font-size: .9375rem; }
@@ -204,8 +197,7 @@ figure.narrow { max-width: 26rem; margin-left: auto; margin-right: auto; }
   figure.wide { margin-left: -6rem; margin-right: -6rem; }
 }
 @media (min-width: 1100px) {
-  figure.wide { margin-left: 0; margin-right: -12rem; }
-  figure.lead { margin-right: -12rem; }
+  figure.lead { margin-left: -8rem; margin-right: -8rem; }
 }
 
 .figrow { display: grid; gap: 1.5rem; margin: 2rem 0; }
@@ -264,9 +256,42 @@ tbody tr:last-child td { padding-bottom: .5rem; }
 .team { list-style: none; padding: 0; margin: 1.5rem 0; display: grid; gap: 1.5rem 1.25rem; grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr)); }
 .team li { display: grid; gap: .15rem; text-align: center; }
 .ph-face { aspect-ratio: 1; border-radius: 50%; width: 7rem; margin: 0 auto .5rem; padding: 0; }
-.tname { font-weight: 700; color: var(--ink-2); font-style: italic; }
+.tname { font-weight: 700; }
 .trole { color: var(--ink-2); font-style: italic; font-size: 1rem; }
 .docs .dname { display: block; }
+
+/* Contents on the home page, set like a LaTeX table of contents */
+.contents { margin-top: 3rem; }
+.contents { counter-increment: none; }
+.contents h2 { font-size: 1.5rem; margin: 0 0 1rem; }
+.contents h2::before { content: none !important; }
+.toc-full { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+.toc-full a {
+  display: flex; align-items: baseline; gap: .6rem;
+  padding: .55rem 0; text-decoration: none; border-bottom: 1px solid var(--hair);
+  font-size: 1.125rem;
+}
+.toc-full .n { min-width: 1.8em; font-weight: 700; font-variant-numeric: tabular-nums; }
+.toc-full .t { font-weight: 700; }
+.toc-full .dots { flex: 1; border-bottom: 1.5px dotted var(--ink-2); transform: translateY(-.3em); min-width: 1rem; }
+.toc-full .go { font-variant: small-caps; letter-spacing: .05em; color: var(--ink-2); font-size: .9375rem; transition: color .15s ease-out; }
+.toc-full a:hover .t { text-decoration: underline; text-underline-offset: .18em; }
+.toc-full a:hover .go { color: var(--ink); }
+.byline.names { font-style: italic; margin-top: .6rem; text-wrap: balance; }
+
+/* Section pages */
+.crumb { margin: 2.5rem 0 .5rem; font-size: .9375rem; }
+.crumb a { color: var(--ink-2); }
+h1.sec { text-align: left; font-weight: 700; font-size: clamp(1.75rem, 1.4rem + 1.5vw, 2.25rem); margin: 0 0 .75rem; display: flex; gap: .75em; }
+.secno { font-variant-numeric: tabular-nums; }
+.lede { margin-bottom: 1rem; }
+main > section h2 { font-size: 1.3125rem; margin: 2.25rem 0 .6rem; }
+.ph-table td { height: 2.1rem; }
+.pager { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 3.5rem 0 0; border-top: 1px solid var(--rule); padding-top: 1rem; }
+.pager a { text-decoration: none; display: grid; gap: .1rem; font-weight: 700; }
+.pager a:hover { text-decoration: underline; text-underline-offset: .18em; }
+.pager .next { text-align: right; }
+.pager .pl { font-weight: 400; font-variant: small-caps; letter-spacing: .05em; color: var(--ink-2); font-size: .875rem; }
 
 /* Colophon */
 .colophon {

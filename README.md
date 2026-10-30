@@ -6,9 +6,9 @@ Static site for the Automated Power Line Peeler capstone (ME 473, CCNY). Plain H
 
 | Path | What it is |
 |---|---|
-| `index.html` | The page |
+| `index.html` | Home: title, team, 3D model, contents |
 | `style.css` | Black-and-white, Times New Roman, LaTeX-article styling |
-| `site.js` | Contents highlighting, cycle-time calculator (port of `calculations/APLP-cycle-time.xlsx`), figure zoom |
+| `*.html` | One page per section, generated as placeholders; fill them in as content arrives |
 | `viewer.js` | 3D viewer for `assets/aplp-rotary.glb` (Rev D CAD), with ring-angle slider and orbit animation |
 | `vendor/three/` | three.js r160 (MIT licence), served locally so the site has no CDN dependency |
 | `assets/` | Figures, the 3D model and the cutting-calculations PDF |
@@ -34,6 +34,6 @@ then open http://localhost:8000.
 
 ## Updating
 
-- Text lives in `index.html`. Keep the copy plain and specific.
+- Each section is its own page (`problem.html`, `principles.html`, ...). Replace a placeholder frame (`.ph-box`) with an `<img>` and its "to come" text with real copy.
 - The 3D model comes from `gear-system/cad/out/APLP_rotary_assembly.step`, converted with `cascadio.step_to_glb(..., tol_linear=0.08, tol_angular=0.4)`. Part names in the STEP drive the hover descriptions in `viewer.js` (`PARTS`) and which parts turn with the ring (`ON_RING`).
 - Calculator constants are at the top of the model block in `site.js` and match the spreadsheet.

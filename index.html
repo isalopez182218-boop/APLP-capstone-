@@ -16,46 +16,20 @@
 <a class="skip" href="#main">Skip to the text</a>
 
 <header class="runninghead" aria-label="Site">
-  <span class="rh-title">Automated Power Line Peeler</span>
+  <a class="rh-title" href="index.html">Automated Power Line Peeler</a>
   <span class="rh-meta">ME 473 Capstone &middot; City College of New York</span>
 </header>
 
 <div class="page">
-
-<nav class="toc" aria-label="Contents">
-  <details open>
-    <summary>Contents</summary>
-    <ol>
-      <li><a href="#problem">The problem</a></li>
-      <li><a href="#machine">The machine</a></li>
-      <li><a href="#principles">Mechanical principles</a></li>
-      <li><a href="#cycle">One peeling cycle</a></li>
-      <li><a href="#control">Control</a></li>
-      <li><a href="#electronics">Electronics</a></li>
-      <li><a href="#firmware">Firmware</a></li>
-      <li><a href="#analysis">Cutting analysis</a></li>
-      <li><a href="#manufacturing">Manufacturing</a></li>
-      <li><a href="#tests">Bench tests</a></li>
-      <li><a href="#prototype">Prototype</a></li>
-      <li><a href="#legacy">Legacy models</a></li>
-      <li><a href="#concepts">Concepts considered</a></li>
-      <li><a href="#nature">Precedents from nature</a></li>
-      <li><a href="#schedule">Schedule</a></li>
-      <li><a href="#team">Team</a></li>
-      <li><a href="#documents">Documents</a></li>
-    </ol>
-  </details>
-</nav>
-
 <main id="main">
 
 <div class="titleblock">
   <h1>Automated Power Line Peeler <span class="abbr">(APLP)</span></h1>
-  <p class="subtitle">A portable machine that strips insulation from installed power cable to a set thickness, without anyone holding the knife</p>
+  <p class="subtitle">A portable machine that strips insulation from installed power cable to a set thickness</p>
   <p class="byline">ME 473 Senior Design, Project&nbsp;#1 &middot; City College of New York<br>
-  Sponsor: General Dynamics Mission Systems &middot; Instructor: Prof. Sadegh</p>
-  <p class="date">Fall 2026 &ndash; Spring 2027 &middot; updated 30 October 2026</p>
-  <p class="jump"><a href="#model">Turn the 3D model</a><a href="#calculator">Run the cycle-time model</a></p>
+  Sponsor: General Dynamics Mission Systems &middot; Advisor: Prof. Ali Sadegh</p>
+  <p class="byline names">Joel Alex &middot; Oliver Alfaro &middot; Isaac Morel &middot; James Posadas &middot; Sukhvir Singh &middot; Massimo Turcios</p>
+  <p class="date">Fall 2026 &ndash; Spring 2027</p>
 </div>
 
 <dl class="facts" aria-label="Design targets">
@@ -65,14 +39,9 @@
   <div><dt>Power</dt><dd>&lt;&nbsp;500&nbsp;W</dd></div>
 </dl>
 
-<section class="abstract" aria-label="Abstract">
-  <h2>Abstract</h2>
-  <p>Splicing or terminating a power cable starts with removing its insulation, and today that is done by hand with a knife or a manual stripper. The APLP is a clamp-on machine that does the job by itself: it closes on a cable between 3/4&nbsp;in and 2&nbsp;in in diameter, measures it, and removes up to 1/2&nbsp;in of insulation over a 6&nbsp;in length, leaving the remaining wall within 5&nbsp;mil. Everything has to fit in a 6&nbsp;&times;&nbsp;6&nbsp;&times;&nbsp;12&nbsp;in box, weigh under 20&nbsp;lb and run on less than 500&nbsp;W at 50&nbsp;V&nbsp;DC or below. Our design is an open-mouth saddle: a C-shaped ring gear drops over the cable, orbits a small high-speed burr around it, and a ball screw walks the ring along the strip while a follower wheel holds the cut depth. This page follows the project from requirements to the prototype due on 17&nbsp;November.</p>
-</section>
-
 <figure class="lead viewer" id="model">
   <div class="stage">
-    <img class="poster" src="assets/rotary-iso.jpg" width="1060" height="795" alt="CAD render of the rotary module: a square frame with a C-shaped ring gear open at the bottom, two small pinions driving the ring, and a motor-driven cutting wheel on a swing arm resting on a 2 inch cable.">
+    <img class="poster" src="assets/rotary-iso.jpg" width="1060" height="795" alt="CAD render of the rotary module: a square frame with a C-shaped ring gear open at the bottom, two pinions driving the ring, and a cutting wheel on a swing arm over a 2 inch cable.">
     <canvas aria-label="Interactive 3D model of the rotary module. Drag to turn it, scroll or pinch to zoom."></canvas>
     <p class="partinfo" aria-live="polite"><span class="pname">Point at a part</span><span class="pdesc">Drag to turn the model, scroll or pinch to zoom.</span></p>
   </div>
@@ -82,378 +51,41 @@
     <button type="button" id="plate" aria-pressed="false">Hide front plate</button>
     <button type="button" id="reset">Reset view</button>
   </div>
-  <figcaption><span class="fig">Figure 1:</span> Rotary module, CAD study Rev&nbsp;D, on a 2&nbsp;in cable. The ring is open at the bottom so the machine can be lowered onto a cable that is already installed. Swing the ring through its &plusmn;190&deg; stroke and watch the gap pass each pinion in turn.</figcaption>
+  <figcaption><span class="fig">Figure 1:</span> Rotary module on a 2&nbsp;in cable.</figcaption>
 </figure>
 
-<section id="problem">
-  <h2>The problem</h2>
-  <p>The statement of work from General Dynamics Mission Systems asks for a device that peels insulation automatically once it is placed on the line. The hard numbers are below. The sponsor ranks the trade-offs as size first, then weight, then power, and expects a microcontroller, mostly off-the-shelf parts, 3D-printed structure and a weatherized final design.</p>
-
-  <div class="tablewrap">
-  <table>
-    <caption><span class="fig">Table 1:</span> Requirements from the statement of work (Rev&nbsp;002).</caption>
-    <thead><tr><th scope="col">Quantity</th><th scope="col" class="num">Requirement</th><th scope="col">Note</th></tr></thead>
-    <tbody>
-      <tr><td>Cable outside diameter</td><td class="num">19&ndash;51&nbsp;mm (3/4&ndash;2&nbsp;in)</td><td>2.67&nbsp;:&nbsp;1 range, the hardest requirement</td></tr>
-      <tr><td>Insulation removed</td><td class="num">up to 12.7&nbsp;mm (1/2&nbsp;in)</td><td>read as radial</td></tr>
-      <tr><td>Remaining-wall tolerance</td><td class="num">&plusmn;0.127&nbsp;mm (5&nbsp;mil)</td><td>to be revisited with sponsor</td></tr>
-      <tr><td>Strip length</td><td class="num">&ge;&nbsp;152.4&nbsp;mm (6&nbsp;in)</td><td></td></tr>
-      <tr><td>Envelope</td><td class="num">6&nbsp;&times;&nbsp;6&nbsp;&times;&nbsp;12&nbsp;in</td><td></td></tr>
-      <tr><td>Mass</td><td class="num">&le;&nbsp;20&nbsp;lb</td><td></td></tr>
-      <tr><td>Power</td><td class="num">&lt;&nbsp;500&nbsp;W, &le;&nbsp;50&nbsp;V&nbsp;DC</td><td></td></tr>
-    </tbody>
-  </table>
-  </div>
-
-  <p>The worst case is a 2&nbsp;in cable with the full 1/2&nbsp;in taken off. That is a tube of insulation with an outer radius of 25.4&nbsp;mm, an inner radius of 12.7&nbsp;mm and a length of 152.4&nbsp;mm:</p>
-  <p class="eq"><var>V</var> = &pi;(25.4<sup>2</sup> &minus; 12.7<sup>2</sup>) &times; 152.4 &asymp; 231&thinsp;700&nbsp;mm<sup>3</sup><span class="eqno">(1)</span></p>
-  <p>About 232&nbsp;cm<sup>3</sup> of cross-linked polyethylene has to become chips, inside a box that is barely wider than the cable is long. Almost every later decision traces back to that volume and the 500&nbsp;W ceiling.</p>
+<section class="contents" id="contents" aria-labelledby="contents-h">
+  <h2 id="contents-h">Contents</h2>
+  <ol class="toc-full">
+    <li><a href="problem.html"><span class="n">1</span><span class="t">The problem</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="machine.html"><span class="n">2</span><span class="t">The machine</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="principles.html"><span class="n">3</span><span class="t">Mechanical principles</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="cycle.html"><span class="n">4</span><span class="t">One peeling cycle</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="control.html"><span class="n">5</span><span class="t">Control</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="electronics.html"><span class="n">6</span><span class="t">Electronics</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="firmware.html"><span class="n">7</span><span class="t">Firmware</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="analysis.html"><span class="n">8</span><span class="t">Cutting analysis</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="manufacturing.html"><span class="n">9</span><span class="t">Manufacturing</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="tests.html"><span class="n">10</span><span class="t">Bench tests</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="prototype.html"><span class="n">11</span><span class="t">Prototype</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="legacy.html"><span class="n">12</span><span class="t">Legacy models</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="concepts.html"><span class="n">13</span><span class="t">Concepts considered</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="nature.html"><span class="n">14</span><span class="t">Precedents from nature</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="schedule.html"><span class="n">15</span><span class="t">Schedule</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="team.html"><span class="n">16</span><span class="t">Team</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+    <li><a href="documents.html"><span class="n">17</span><span class="t">Documents</span><span class="dots" aria-hidden="true"></span><span class="go">open</span></a></li>
+  </ol>
 </section>
-
-<section id="machine">
-  <h2>The machine</h2>
-  <p>We started from the pipe saddle machine, a tool that welders clamp onto pipe to orbit a cutting torch around it. Scaled down to roughly 1/2.3 and given a cutter in place of the torch, it already does most of what the APLP needs. Four changes adapt it to cable.</p>
-
-  <p>The module has four main parts: an open ring gear that carries the cutter around the cable, an axial stage that moves the ring along the strip, two end chucks that hold the cable, and a follower wheel that sets the cut depth. Section&nbsp;3 explains how each one works.</p>
-
-  <div class="figrow">
-    <figure>
-      <img class="zoom" tabindex="0" src="assets/front-open.jpg" width="842" height="872" alt="Front view with the front plate removed: the C-shaped ring gear turned 35 degrees, both pinions at the top, the rollers that hold the ring, and the cutter head on the ring around the cable.">
-      <figcaption><span class="fig">Figure 2:</span> Front plate removed, ring turned 35&deg;. Both pinions still mesh at the top while the ring's gap swings away from the frame opening.</figcaption>
-    </figure>
-    <figure>
-      <img class="zoom" tabindex="0" src="assets/back-drive.jpg" width="847" height="785" alt="Rear three-quarter view showing the orbit gearmotor and the belt linking the two pinion shafts on the back plate, with the guide rods and bearing blocks of the axial stage.">
-      <figcaption><span class="fig">Figure 3:</span> Back of the module: orbit gearmotor, the belt that ties the two pinions together, and the axial stage.</figcaption>
-    </figure>
-  </div>
-
-  <p>The team's current Fusion&nbsp;360 assembly measures 152&nbsp;&times;&nbsp;149&nbsp;&times;&nbsp;290&nbsp;mm, inside the 6&nbsp;&times;&nbsp;6&nbsp;&times;&nbsp;12&nbsp;in limit.</p>
-
-  <figure class="wide">
-    <img class="zoom" tabindex="0" src="assets/ga-drawing.png" width="1600" height="800" alt="Black and white general arrangement drawing of the saddle machine in front and side views with overall dimensions.">
-    <figcaption><span class="fig">Figure 4:</span> General arrangement, front and side views (Rev&nbsp;D study). The side view is longer than the 12&nbsp;in envelope; closing that gap is one goal of the current Fusion model.</figcaption>
-  </figure>
-</section>
-
-<section id="principles">
-  <h2>Mechanical principles</h2>
-  <p>Each function of the machine is handled by its own mechanism. This section takes them in the order the cable meets them.</p>
-
-  <h3>Ring drive</h3>
-  <p>The ring gear has a 58&nbsp;mm gap, so the machine drops onto a cable from the side. A gap in a gear means one pinion always loses mesh for part of the turn. Two 14-tooth pinions set 91&deg; apart, linked by a belt, solve that: while the gap passes one pinion, the other is still driving. The 72-tooth ring turns 5.14 times slower than the pinions.</p>
-  <p class="eq"><var>n</var><sub>ring</sub> = <var>n</var><sub>motor</sub> &times; 14/72 = 200&nbsp;rpm / 5.14 &asymp; 39&nbsp;rpm<span class="eqno">(2)</span></p>
-  <p>The ring swings &plusmn;190&deg; and reverses instead of turning continuously. That covers the full circumference with 20&deg; of overlap, and the cutter's wiring can follow it without a slip ring.</p>
-
-  <h3>Axial feed</h3>
-  <p>The ring carriage rides on two &Oslash;10&nbsp;mm guide rods and a 12&nbsp;mm ball screw with 4&nbsp;mm lead and 160&nbsp;mm of travel, driven by a NEMA&nbsp;17 stepper. At 1/16 microstepping one step moves the carriage 0.02&nbsp;mm. The carriage steps 3&nbsp;mm at the end of each ring stroke.</p>
-
-  <h3>Cutter</h3>
-  <p>A high-speed spindle on a swing arm carries the cutting tool. The prototype uses a Dremel. The final version uses a 24&nbsp;V brushless motor and a &Oslash;4&nbsp;mm burr at about 20&thinsp;000&nbsp;rpm, which needs about 62&nbsp;W at the worst case (Section&nbsp;8).</p>
-
-  <h3>Depth datum</h3>
-  <p>Depth is set by a follower wheel that rides on the cable surface next to the cutter. The cable bends and the clamps squeeze it by more than 5&nbsp;mil, so the cut has to be measured from the cable itself and never from where the arm thinks it is. A gnawing rodent works the same way, bracing its upper teeth on the surface it cuts.</p>
-
-  <h3>Clamping and centring</h3>
-  <p>Two split chucks, one at each end, hold the cable on the ring axis while the ring works between them. Each chuck has a hinged gate so it can open around an installed cable. On a horizontal cable each chuck needs about 164&nbsp;N of grip; on a vertical cable, where it also carries the machine, about 600&nbsp;N.</p>
-  <div class="ph-grid"><figure class="ph"><div class="ph-box"><span>Figure: chuck and hinged gate</span></div><figcaption><span class="fig">Figure 5:</span> <span class="tbd">Caption to come.</span></figcaption></figure><figure class="ph"><div class="ph-box"><span>Figure: chuck closed on 3/4 in and 2 in cable</span></div><figcaption><span class="fig">Figure 6:</span> <span class="tbd">Caption to come.</span></figcaption></figure></div>
-
-  <h3>Cable support at the cut</h3>
-  <p>Between the chucks the cable can bow away from the cutter. We are adding two spring-loaded rollers on the ring, at 120&deg; and 240&deg; from the cutter, that press the cable against the follower wheel at about 40&nbsp;N each. A small motor sets the spring preload for each cable size, and the rollers ride on uncut insulation just ahead of the cut.</p>
-  <div class="ph-grid"><figure class="ph"><div class="ph-box ph-wide"><span>Figure: roller layout on the ring</span></div><figcaption><span class="fig">Figure 7:</span> <span class="tbd">Caption to come.</span></figcaption></figure></div>
-
-  <h3>Chip removal</h3>
-  <p class="tbd">To be designed. About 232&nbsp;cm<sup>3</sup> of chips have to leave the machine without jamming the gears, the rollers or the ball screw.</p>
-  <div class="ph-grid"><figure class="ph"><div class="ph-box ph-wide"><span>Figure: chip shroud and wipers</span></div><figcaption><span class="fig">Figure 8:</span> <span class="tbd">Caption to come.</span></figcaption></figure></div>
-</section>
-
-<section id="cycle">
-  <h2>One peeling cycle</h2>
-  <p>An operator places the machine on the cable and presses start. From there the cycle runs on its own. The tool touches the cable before cutting, and the spindle current spike at contact gives the controller the actual cable diameter, so one machine handles every size in the range without a setting from the operator.</p>
-  <div class="figside">
-    <figure>
-      <img class="zoom" tabindex="0" src="assets/sequence.png" width="1200" height="1374" alt="Flow chart of six steps: place and clamp; home and measure; set cut depth up to 3 mm per pass; cut by orbiting the ring plus or minus 190 degrees and stepping 3 mm along until 6 inches, repeating for about five passes; finish pass of 0.3 mm with thickness check; retract and release.">
-      <figcaption><span class="fig">Figure 9:</span> Peeling sequence.</figcaption>
-    </figure>
-    <div>
-      <p>Material comes off in roughing passes of up to 3&nbsp;mm. In each pass the ring swings through its arc, the carriage steps 3&nbsp;mm along the cable, and the ring swings back. After about five passes a 0.3&nbsp;mm finishing pass brings the wall to size, and the follower wheel reports the remaining thickness.</p>
-      <p>Our cycle-time model takes each pass as the slower of two limits: how fast the ring can sweep, and how fast the spindle power can turn insulation into chips. With a 200&nbsp;rpm orbit motor the worst case comes to about 10.7&nbsp;minutes. A faster orbit motor and a 150&nbsp;W spindle would bring it to 5&ndash;6&nbsp;minutes.</p>
-    </div>
-  </div>
-
-  <div class="calc" id="calculator">
-    <h3>Try the cycle-time model</h3>
-    <p class="calc-intro">This is the same model as our spreadsheet. Move the inputs and the end view, the pass schedule and the cycle time update. The defaults are the worst case in the statement of work.</p>
-    <div class="calc-grid">
-      <form class="inputs" aria-label="Model inputs" onsubmit="return false">
-        <label>Cable diameter <output id="oOD"></output><input type="range" id="iOD" min="19" max="51" step="0.1" value="50.8"></label>
-        <label>Insulation removed <output id="oD"></output><input type="range" id="iD" min="1" max="12.7" step="0.1" value="12.7"></label>
-        <label>Strip length <output id="oL"></output><input type="range" id="iL" min="50" max="305" step="0.1" value="152.4"></label>
-        <label>Orbit motor speed <output id="oRPM"></output><input type="range" id="iRPM" min="60" max="620" step="10" value="200"></label>
-        <label>Spindle power into the cut <output id="oP"></output><input type="range" id="iP" min="30" max="300" step="5" value="60"></label>
-        <button type="button" id="calcReset">Back to worst case</button>
-      </form>
-      <div class="endview">
-        <svg id="endSvg" viewBox="-60 -60 120 120" role="img" aria-labelledby="endTitle">
-          <title id="endTitle">End view of the cable showing the insulation removed in each pass</title>
-          <defs>
-            <pattern id="hatch" width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <line x1="0" y1="0" x2="0" y2="2.4" stroke="currentColor" stroke-width=".45"/>
-            </pattern>
-          </defs>
-          <g id="endG"></g>
-        </svg>
-        <p class="legend"><span class="sw hatch"></span>removed <span class="sw solid"></span>left on the cable</p>
-      </div>
-    </div>
-    <dl class="results">
-      <div><dt>Cycle time</dt><dd id="rT"></dd></div>
-      <div><dt>Volume removed</dt><dd id="rV"></dd></div>
-      <div><dt>Passes</dt><dd id="rN"></dd></div>
-      <div><dt>Slowest step</dt><dd id="rB"></dd></div>
-    </dl>
-    <div class="tablewrap">
-      <table id="passTable">
-        <caption><span class="fig">Table 2:</span> Pass schedule for the inputs above.</caption>
-        <thead><tr><th scope="col">Pass</th><th scope="col" class="num">Depth</th><th scope="col" class="num">Volume</th><th scope="col" class="num">Time</th><th scope="col">Limited by</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-    <p class="note">Assumptions: 72&nbsp;:&nbsp;14 ring-to-pinion ratio, &plusmn;190&deg; stroke with 0.2&nbsp;s to reverse, 3&nbsp;mm axial step, roughing passes up to 3&nbsp;mm, a 0.3&nbsp;mm finish pass at 75% ring speed, specific cutting energy 0.1&nbsp;J/mm<sup>3</sup>, and 50&nbsp;s for clamping, homing and release. Removal stops at least 5&nbsp;mm from the cable centre.</p>
-  </div>
-</section>
-
-<section id="control">
-  <h2>Control</h2>
-  <p>An ESP32-S3 runs a supervisory state machine that steps through the peeling cycle in Section&nbsp;4, with a 1&nbsp;kHz control tick underneath it. Each drive has its own loop:</p>
-  <div class="tablewrap">
-  <table>
-    <caption><span class="fig">Table 3:</span> Drives and their control loops.</caption>
-    <thead><tr><th scope="col">Drive</th><th scope="col">Job</th><th scope="col">Loop</th><th scope="col">Prototype</th></tr></thead>
-    <tbody>
-      <tr><td>M1 spindle</td><td>Turn the cutter</td><td>Speed, closed in the ESC; current watched for load and touch-off</td><td>Dremel, by hand</td></tr>
-      <tr><td>M2 orbit</td><td>Swing the ring &plusmn;190&deg;</td><td>Position PID on the motor encoder, home from a Hall sensor</td><td>motorized</td></tr>
-      <tr><td>M3 axial</td><td>Move the ring along the cable</td><td>Stepper, open loop with limit switches and stall detection</td><td>motorized</td></tr>
-      <tr><td>M4 depth</td><td>Set the cut depth</td><td>Cascade: motor position inside, follower-wheel depth outside</td><td>thumbwheel</td></tr>
-      <tr><td>M5 clamps</td><td>Close the chucks</td><td>Drive until the switch closes and current reaches the set grip</td><td>manual latch</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <p>Two details make the machine work on any cable size without setup. The spindle current jumps when the tool first touches the cable, which gives the controller the cable diameter. The depth loop then reads the follower wheel, so the cut depth is relative to the real surface.</p>
-  <figure class="wide">
-    <img class="zoom" tabindex="0" src="assets/control-loops.png" width="1600" height="1024" alt="Five control loop block diagrams, one per drive: spindle speed loop, ring position loop, axial step-per-stroke feed with limits, cascaded depth loop with follower feedback, and clamp close-to-force loop.">
-    <figcaption><span class="fig">Figure 10:</span> One control loop per drive. Solid lines are commands, dashed lines feedback.</figcaption>
-  </figure>
-</section>
-
-<section id="electronics">
-  <h2>Electronics</h2>
-  <p>Power comes from a 24&nbsp;V six-cell lithium-ion pack with a 15&nbsp;A fuse. An emergency stop opens a safety relay on the motor bus while the 5&nbsp;V logic supply stays up, so the controller can log what happened. Peak draw is about 140&nbsp;W, well under the 500&nbsp;W limit. The ESP32-S3 runs out of pins, so slow inputs go through an MCP23017 expander and slow analog signals through an ADS1115.</p>
-  <figure class="wide">
-    <img class="zoom" tabindex="0" src="assets/control-system.png" width="1600" height="1058" alt="Block diagram: a 24 V battery feeds a 5 V buck converter and, through an E-stop and safety relay, the motor bus. The ESP32-S3 in the centre receives sensor groups on the left and drives five motor drivers on the right for the spindle, orbit, axial feed, radial depth and clamps.">
-    <figcaption><span class="fig">Figure 11:</span> Electrical system. Red lines carry power, blue lines commands, dashed green lines sensor feedback.</figcaption>
-  </figure>
-  <div class="tablewrap">
-  <table>
-    <caption><span class="fig">Table 4:</span> Main sensors.</caption>
-    <thead><tr><th scope="col">Measures</th><th scope="col">Part</th><th scope="col">Used for</th></tr></thead>
-    <tbody>
-      <tr><td>Cable present</td><td>TCRT5000 IR</td><td>Automatic start when placed</td></tr>
-      <tr><td>Ring home</td><td>A3144 Hall + magnet</td><td>Line the gap up with the mouth</td></tr>
-      <tr><td>Ring overtravel</td><td>2 sealed microswitches</td><td>Hard stop at &plusmn;200&deg;</td></tr>
-      <tr><td>Cut depth</td><td>TMAG5273 Hall on follower wheel</td><td>Depth loop, final thickness check</td></tr>
-      <tr><td>Spindle current</td><td>ESC current output</td><td>Touch-off and load</td></tr>
-      <tr><td>Cut temperature</td><td>MLX90614 IR</td><td>Slow down before the insulation melts</td></tr>
-      <tr><td>Battery</td><td>INA226 + shunt</td><td>Power and energy per strip</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="ph-grid"><figure class="ph"><div class="ph-box"><span>Figure: wiring diagram</span></div><figcaption><span class="fig">Figure 12:</span> <span class="tbd">Caption to come.</span></figcaption></figure><figure class="ph"><div class="ph-box"><span>Photo: controller board</span></div><figcaption><span class="fig">Figure 13:</span> <span class="tbd">Caption to come.</span></figcaption></figure></div>
-</section>
-
-<section id="firmware">
-  <h2>Firmware</h2>
-  <p class="tbd">Firmware structure, state machine code and a link to the source repository will go here.</p>
-  <div class="ph-grid"><figure class="ph"><div class="ph-box ph-wide"><span>Figure: state machine diagram</span></div><figcaption><span class="fig">Figure 14:</span> <span class="tbd">Caption to come.</span></figcaption></figure></div>
-</section>
-
-
-<section id="analysis">
-  <h2>Cutting analysis</h2>
-  <p>To size the spindle and clamps we estimated cutting loads from the specific cutting energy of polyethylene, taken as 0.1&nbsp;J/mm<sup>3</sup> for a sharp tool and 1.0&nbsp;J/mm<sup>3</sup> for an abrasive wheel, with a safety factor of 3 on clamp force. The table below compares the three ways of cutting we considered, for the worst-case cable.</p>
-
-  <div class="tablewrap">
-  <table>
-    <caption><span class="fig">Table 5:</span> Cutting methods at the worst case (2&nbsp;in cable, 12.7&nbsp;mm removed, 152.4&nbsp;mm long).</caption>
-    <thead><tr><th scope="col">Method</th><th scope="col" class="num">Power</th><th scope="col" class="num">Cutting force</th><th scope="col" class="num">Cycle</th><th scope="col">Verdict</th></tr></thead>
-    <tbody>
-      <tr><td>&Oslash;4&nbsp;mm burr, 20&thinsp;000&nbsp;rpm</td><td class="num">62&nbsp;W</td><td class="num">14.7&nbsp;N</td><td class="num">&asymp;&nbsp;10.7&nbsp;min</td><td>selected</td></tr>
-      <tr><td>Abrasive wheel</td><td class="num">300&nbsp;W</td><td class="num">low</td><td class="num">&asymp;&nbsp;13&nbsp;min</td><td>power-bound</td></tr>
-      <tr><td>Skiving blade, full depth</td><td class="num">&mdash;</td><td class="num">508&nbsp;N</td><td class="num">&mdash;</td><td>rejected</td></tr>
-    </tbody>
-  </table>
-  </div>
-
-  <p>The burr's 14.7&nbsp;N of tangential force needs only 0.37&nbsp;N&middot;m at the ring and 164&nbsp;N of grip from each chuck. Cable deflection under that load stays below 0.03&nbsp;mm. A blade taking the full depth in one pass would need about 5.7&nbsp;kN of clamp force and would crush the insulation under the jaws, which ruled it out. One load turned out larger than the cut itself: if the machine hangs on a vertical cable, each chuck must hold about 600&nbsp;N to carry the machine's weight with margin.</p>
-</section>
-
-<section id="manufacturing">
-  <h2>Manufacturing</h2>
-  <p>All structural parts are 3D printed on a Bambu Lab P2S (256&nbsp;&times;&nbsp;256&nbsp;&times;&nbsp;256&nbsp;mm build volume) in PETG or ASA, with four walls and 40% gyroid infill. Every part was laid out to print without supports. The Rev&nbsp;D set is 19 parts, about 300&nbsp;cm<sup>3</sup> of plastic and under 400&nbsp;g. Bearings, screws, rods, the ball screw and the motors are off-the-shelf.</p>
-  <div class="ph-grid"><figure class="ph"><div class="ph-box"><span>Photo: printed parts on the build plate</span></div><figcaption><span class="fig">Figure 15:</span> <span class="tbd">Caption to come.</span></figcaption></figure><figure class="ph"><div class="ph-box"><span>Photo: parts laid out before assembly</span></div><figcaption><span class="fig">Figure 16:</span> <span class="tbd">Caption to come.</span></figcaption></figure></div>
-  <div class="tablewrap">
-  <table>
-    <caption><span class="fig">Table 6:</span> Bill of materials.</caption>
-    <thead><tr><th scope="col">Item</th><th scope="col">Part</th><th scope="col" class="num">Qty</th><th scope="col">Source</th></tr></thead>
-    <tbody>
-      <tr><td class="tbd">&mdash;</td><td class="tbd">to come, 24 Nov</td><td class="num tbd">&mdash;</td><td class="tbd">&mdash;</td></tr>
-    </tbody>
-  </table>
-  </div>
-</section>
-
-<section id="tests">
-  <h2>Bench tests</h2>
-  <p>On 15&nbsp;October we tried a Dremel and a bench sander on a sample cable. Both cut the jacket without melting it, though both needed hand force to keep cutting. In Test&nbsp;3 we turned a 7.21&nbsp;mm cable under a Dremel abrasive wheel at 5&nbsp;s per revolution while feeding it 125&nbsp;mm in 30&nbsp;s.</p>
-  <p>The result was a clean helical groove with a pitch of 20.8&nbsp;mm, six turns long. The groove is about 1.1&nbsp;mm wide, so it touched only 5% of the surface. Clearing the whole surface at the same settings would take about 114 revolutions, or 9.5&nbsp;minutes, which agrees with the cycle-time model. Test&nbsp;4 will add a wattmeter on the Dremel and measure the groove volume, so we can replace the 0.1&nbsp;J/mm<sup>3</sup> estimate with a measured value.</p>
-</section>
-
-<section id="prototype">
-  <h2>Prototype</h2>
-  <p>The first prototype is due on 17&nbsp;November. Photos, test videos and results will go here as it is built.</p>
-  <div class="ph-grid">
-    <figure class="ph"><div class="ph-box ph-wide"><span>Photo: assembled prototype on a 2&nbsp;in cable</span></div><figcaption><span class="fig">Figure 17:</span> <span class="tbd">Caption to come.</span></figcaption></figure>
-    <figure class="ph"><div class="ph-box"><span>Photo: cutter head close-up</span></div><figcaption><span class="fig">Figure 18:</span> <span class="tbd">Caption to come.</span></figcaption></figure>
-    <figure class="ph"><div class="ph-box"><span>Photo: stripped cable sample</span></div><figcaption><span class="fig">Figure 19:</span> <span class="tbd">Caption to come.</span></figcaption></figure>
-    <figure class="ph"><div class="ph-box ph-wide ph-video"><span>Video: one full peeling cycle</span></div><figcaption><span class="fig">Video 1:</span> <span class="tbd">Caption to come.</span></figcaption></figure>
-  </div>
-  <div class="tablewrap">
-  <table class="ph-table">
-    <caption><span class="fig">Table 7:</span> Prototype test results.</caption>
-    <thead><tr><th scope="col">Test</th><th scope="col">Cable</th><th scope="col" class="num">Depth</th><th scope="col" class="num">Cycle time</th><th scope="col">Result</th></tr></thead>
-    <tbody>
-      <tr><td>Test 4</td><td class="tbd">&mdash;</td><td class="num tbd">&mdash;</td><td class="num tbd">&mdash;</td><td class="tbd">to come</td></tr>
-      <tr><td>Test 5</td><td class="tbd">&mdash;</td><td class="num tbd">&mdash;</td><td class="num tbd">&mdash;</td><td class="tbd">to come</td></tr>
-    </tbody>
-  </table>
-  </div>
-</section>
-
-<section id="legacy">
-  <h2>Legacy models</h2>
-  <p>The design went through several models before the current one. Each solved a problem the one before it had.</p>
-  <div class="tablewrap">
-  <table>
-    <caption><span class="fig">Table 8:</span> Model history.</caption>
-    <thead><tr><th scope="col">Model</th><th scope="col">Date</th><th scope="col">What changed</th></tr></thead>
-    <tbody>
-      <tr><td>Concept sketches A&ndash;D</td><td>Sep 2026</td><td>Four ways to remove insulation, scored in a Pugh matrix</td></tr>
-      <tr><td>Saddle Rev&nbsp;C</td><td>18 Oct</td><td>Open ring on a ball-screw stage, Dremel cutter on a flex shaft</td></tr>
-      <tr><td>Saddle Rev&nbsp;D</td><td>19 Oct</td><td>Swing-arm cutter replaced the radial slide, which hit the ball screw as it orbited (Figure&nbsp;1)</td></tr>
-      <tr><td>Fusion v3</td><td>20 Oct</td><td>Split three-jaw chucks with hinged gates; frame inside the 6&nbsp;&times;&nbsp;6&nbsp;&times;&nbsp;12&nbsp;in envelope</td></tr>
-      <tr><td>Inchworm variant</td><td>21 Oct</td><td>Clamp inside the ring plus a walking front clamp; planned upgrade</td></tr>
-    </tbody>
-  </table>
-  </div>
-  <div class="ph-grid">
-    <figure class="ph"><div class="ph-box"><span>Model: concept sketches A&ndash;D</span></div><figcaption><span class="fig">Figure 20:</span> <span class="tbd">Caption to come.</span></figcaption></figure>
-    <figure class="ph"><div class="ph-box"><span>Model: saddle Rev C</span></div><figcaption><span class="fig">Figure 21:</span> <span class="tbd">Caption to come.</span></figcaption></figure>
-    <figure><img class="zoom" tabindex="0" src="assets/rotary-iso.jpg" width="1060" height="795" alt="Rev D rotary module render in grey."><figcaption><span class="fig">Figure 22:</span> Saddle Rev&nbsp;D, the model in Figure&nbsp;1.</figcaption></figure>
-    <figure class="ph"><div class="ph-box"><span>Model: Fusion v3</span></div><figcaption><span class="fig">Figure 23:</span> <span class="tbd">Caption to come.</span></figcaption></figure>
-    <figure class="ph"><div class="ph-box"><span>Model: teammate concept</span></div><figcaption><span class="fig">Figure 24:</span> <span class="tbd">Caption to come.</span></figcaption></figure>
-    <figure><img class="zoom" tabindex="0" src="assets/inchworm.png" width="1200" height="1747" alt="Four-step side-view diagram of the inchworm feed: the front clamp steps ahead, hands over, the ring cuts one 40 mm band, then the ring clamp grips again."><figcaption><span class="fig">Figure 25:</span> Inchworm feed. Both clamps only grip uncut insulation ahead of the cutter.</figcaption></figure>
-  </div>
-</section>
-
-<section id="concepts">
-  <h2>Concepts considered</h2>
-  <p>We scored nine concepts in a weighted trade study, once with the sponsor's priorities for the final product and once with prototype risk and ease of manufacture weighted highest. The open saddle came out on top for the prototype. The inchworm variant scored highest for the final product, because walking along the cable would let the machine shrink to 7&ndash;8&nbsp;in long, and we keep it as the planned upgrade.</p>
-
-  <div class="tablewrap">
-  <table class="concepts">
-    <caption><span class="fig">Table 9:</span> Concepts and where each one ended up.</caption>
-    <thead><tr><th scope="col">Concept</th><th scope="col">Idea</th><th scope="col">Status</th></tr></thead>
-    <tbody>
-      <tr><td>A</td><td>Split ring-gear lathe that closes around the cable</td><td>merged into E/F</td></tr>
-      <tr><td>B</td><td>Three skewed rollers that crawl along the cable in a helix</td><td>dropped</td></tr>
-      <tr><td>B2</td><td>Opposed V-jaw carrier with a radial slide and spindle</td><td>dropped</td></tr>
-      <tr><td>C</td><td>Band or chain crawler based on the pipe saddle machine</td><td>merged into E/F</td></tr>
-      <tr><td>D</td><td>&ldquo;Pencil sharpener&rdquo; die with four fixed blades</td><td>rejected: needs 1&thinsp;274&nbsp;N of thrust, rollers give 630&nbsp;N</td></tr>
-      <tr><td>E</td><td>Open-mouth saddle with swing-arm cutter (Rev&nbsp;D CAD)</td><td>parts carried into F</td></tr>
-      <tr><td>F</td><td>Open saddle with split end chucks (Fusion v3)</td><td>building for 17&nbsp;Nov</td></tr>
-      <tr><td>G</td><td>Ring-mounted clamp plus inchworm feed</td><td>planned upgrade</td></tr>
-      <tr><td>H</td><td>C-ring with a fixed skiving blade and spring pads</td><td>bench test pending</td></tr>
-    </tbody>
-  </table>
-  </div>
-
-</section>
-
-<section id="nature">
-  <h2>Precedents from nature</h2>
-  <p>No animal removes a measured layer from a cylinder, but several solve parts of the problem. A gnawing rodent braces its upper incisors on the object and cuts with the lower ones, so the cut depth is set by the surface it is cutting, the same principle as our follower wheel. Inchworms move by anchoring one end, pushing the other forward and re-anchoring; their thrust comes from grip, not from friction under a wheel, which is exactly why concept&nbsp;D failed and concept&nbsp;G works. Marc Brunel's 1818 tunnelling shield, often cited as the first engineering design copied from an animal, came from watching the shipworm bore through ship timbers.</p>
-</section>
-
-<section id="schedule">
-  <h2>Schedule</h2>
-  <div class="tablewrap">
-  <table class="schedule">
-    <caption><span class="fig">Table 10:</span> Course milestones, Fall 2026. The project continues through Spring 2027.</caption>
-    <thead><tr><th scope="col">Date</th><th scope="col">Milestone</th><th scope="col">Status</th></tr></thead>
-    <tbody>
-      <tr><td>22 Sep</td><td>Project requirements</td><td>done</td></tr>
-      <tr><td>29 Sep</td><td>Conceptual design, Pugh matrix, Gantt chart</td><td>done</td></tr>
-      <tr><td>15 Oct</td><td>Formal peer review</td><td>done</td></tr>
-      <tr><td>24 Oct</td><td>Trade study and schedule for sponsor</td><td>done</td></tr>
-      <tr><td>10 Nov</td><td>Informal peer review</td><td>next</td></tr>
-      <tr><td>17 Nov</td><td>Prototype built, first report draft</td><td>in progress</td></tr>
-      <tr><td>24 Nov</td><td>Manufacturing drawings and bill of materials</td><td></td></tr>
-      <tr><td>8 Dec</td><td>Final presentation</td><td></td></tr>
-      <tr><td>17 Dec</td><td>Final report</td><td></td></tr>
-    </tbody>
-  </table>
-  </div>
-</section>
-
-<section id="team">
-  <h2>Team</h2>
-  <ul class="team">
-    <li><div class="ph-box ph-face" aria-hidden="true"></div><span class="tname">Name</span><span class="trole">Role</span></li>
-    <li><div class="ph-box ph-face" aria-hidden="true"></div><span class="tname">Name</span><span class="trole">Role</span></li>
-    <li><div class="ph-box ph-face" aria-hidden="true"></div><span class="tname">Name</span><span class="trole">Role</span></li>
-    <li><div class="ph-box ph-face" aria-hidden="true"></div><span class="tname">Name</span><span class="trole">Role</span></li>
-  </ul>
-  <p class="note">Instructor: Prof. Sadegh. Sponsor contact: <span class="tbd">to be added</span>.</p>
-</section>
-
-<section id="documents">
-  <h2>Documents</h2>
-  <ul class="docs">
-    <li><a href="assets/APLP-cutting-calculations.pdf">Cutting calculations</a> <span class="meta">PDF, 10 pages, 27 Oct 2026. Spindle speed, cutting force, clamp reaction and the Test&nbsp;3 analysis.</span></li>
-    <li class="tbd-item"><span class="dname">Conceptual design report</span> <span class="meta">to come</span></li>
-    <li class="tbd-item"><span class="dname">Manufacturing drawings and bill of materials</span> <span class="meta">to come, 24 Nov</span></li>
-    <li class="tbd-item"><span class="dname">CAD files (STEP and STL)</span> <span class="meta">to come</span></li>
-    <li class="tbd-item"><span class="dname">Final presentation</span> <span class="meta">to come, 8 Dec</span></li>
-    <li class="tbd-item"><span class="dname">Final report</span> <span class="meta">to come, 17 Dec</span></li>
-    <li class="tbd-item"><span class="dname">Expo poster</span> <span class="meta">to come</span></li>
-  </ul>
-</section>
-
 </main>
 </div>
 
 <footer class="colophon">
-  <p>Automated Power Line Peeler &middot; ME 473 Capstone, Grove School of Engineering, City College of New York. Sponsored by General Dynamics Mission Systems. Figures are from the team's own CAD and analysis.</p>
+  <p>Automated Power Line Peeler &middot; ME 473 Capstone, Grove School of Engineering, City College of New York. Sponsored by General Dynamics Mission Systems.</p>
 </footer>
-
-<dialog id="lightbox" aria-label="Enlarged figure">
-  <form method="dialog"><button class="close" aria-label="Close">Close</button></form>
-  <p class="lbcap"></p>
-</dialog>
 
 <script type="importmap">
 { "imports": { "three": "./vendor/three/build/three.module.min.js", "three/addons/": "./vendor/three/jsm/" } }
 </script>
-<script src="site.js" defer></script>
 <script type="module" src="viewer.js"></script>
 </body>
 </html>
