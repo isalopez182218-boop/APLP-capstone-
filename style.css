@@ -420,3 +420,51 @@ dialog#lightbox form { text-align: right; margin-bottom: .5rem; }
   figure, table { break-inside: avoid; }
   figure.wide, figure.lead { margin-left: 0; margin-right: 0; }
 }
+
+/* Studies and schedules */
+.studies table .r { text-align: right; }
+.studies table .c { text-align: center; padding-left: .25rem; padding-right: .25rem; }
+.studies tbody th { font-weight: 400; text-align: left; padding: .3rem .75rem .3rem 0; vertical-align: top; }
+.crit { font-size: .9375rem; }
+.crit tbody th { font-weight: 700; }
+.crit .tot { border-top: 1px solid var(--rule); }
+.matrix { font-size: .9375rem; min-width: 44rem; }
+.matrix thead th.c { font-weight: 700; }
+.matrix td.s1 { background: #fff; }
+.matrix td.s2 { background: #f2f2f2; }
+.matrix td.s3 { background: #e2e2e2; }
+.matrix td.s4 { background: #c9c9c9; }
+.matrix td.s5 { background: #111; color: #fff; }
+.matrix tr.res.first { border-top: 1px solid var(--rule); }
+.matrix tr.res th { font-weight: 700; }
+.matrix tr.rank td, .matrix tr.rank th { color: var(--ink-2); font-style: italic; padding-top: 0; }
+.matrix td.best { font-weight: 700; text-decoration: underline; text-underline-offset: .2em; }
+.ranking, .subs { font-size: .9375rem; }
+.ranking { min-width: 36rem; }
+.ranking td:first-child { font-weight: 700; width: 2.5rem; }
+.ranking td:last-child { font-style: italic; }
+.subs { min-width: 36rem; }
+.subs tr.gstart { border-top: 1px solid var(--hair); }
+.subs th[scope=rowgroup] { font-weight: 700; }
+.findings li { margin-bottom: .6rem; }
+.legend { list-style: none; padding: 0; margin: 1rem 0 0; display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; font-size: .9375rem; }
+.legend li { display: flex; align-items: center; gap: .4rem; }
+.sw { display: inline-block; width: 1.4rem; height: .8rem; border: 1px solid var(--ink); }
+.done { background: #111; }
+.prog { background: #8a8a8a; }
+.plan { background: #dcdcdc; }
+.wait { background: repeating-linear-gradient(135deg, #fff 0 3px, #111 3px 4px); }
+.ms { font-size: .875rem; line-height: 1; }
+.gantt { font-size: .875rem; min-width: 52rem; table-layout: fixed; }
+.gantt th.gt { width: 15rem; font-weight: 400; padding-right: .75rem; }
+.gantt .gd { display: block; color: var(--ink-2); font-size: .75rem; font-style: italic; }
+.gantt th.gm { text-align: left; font-size: .8125rem; padding: .35rem 0 .3rem .2rem; border-left: 1px solid var(--hair); }
+.gantt td.g { padding: 0; height: 1.9rem; border-left: 1px solid #f0f0f0; text-align: center; vertical-align: middle; }
+.gantt td.g.done, .gantt td.g.prog, .gantt td.g.plan, .gantt td.g.wait { background-clip: content-box; padding: .5rem 0; }
+.gantt td.now { border-left: 2px solid var(--ink); }
+.gantt tr.phase th { font-weight: 700; padding-top: .7rem; border-top: 1px solid var(--hair); }
+.gwrap { -webkit-overflow-scrolling: touch; }
+@media print { .matrix td.s5 { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+@media (min-width: 1100px) { .studies .tablewrap.wide { margin-left: -7rem; margin-right: -7rem; } }
+.matrix { min-width: 40rem; }
+.gantt { min-width: 50rem; }
